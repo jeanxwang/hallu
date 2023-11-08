@@ -85,6 +85,19 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+
+  fonts:
+    - family: Kitto
+      fonts:
+        - asset: fonts/Kitto-PersonalUse.otf
+    - family: Cushion
+      fonts:
+        - asset: fonts/LTCushion-Black.ttf
+        - asset: fonts/LTCushion-Bold.ttf
+        - asset: fonts/LTCushion-Light.ttf
+        - asset: fonts/LTCushion-Medium.ttf
+        - asset: fonts/LTCushion-VF.ttf
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
