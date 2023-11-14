@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hallu/widgets/left_drawer.dart';
+import 'package:hallu/widgets/shop_card.dart';
 
 class Item {
   final String name;
@@ -11,8 +13,8 @@ class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
 
   final List<Item> items = [
-    Item("Lihat Item", Icons.checklist),
-    Item("Tambah Item", Icons.add_shopping_cart),
+    Item("Peek-a-boo", Icons.checklist),
+    Item("Add Item", Icons.add_shopping_cart),
     Item("Logout", Icons.logout),
   ];
 
@@ -45,6 +47,7 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
       ),
+      drawer: const LeftDrawer(),
       body: SingleChildScrollView(
         // Widget wrapper yang dapat discroll
         child: Padding(
@@ -81,56 +84,6 @@ class MyHomePage extends StatelessWidget {
                 }).toList(),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ShopCard extends StatelessWidget {
-  final Item item;
-
-  const ShopCard(this.item, {super.key}); // Constructor
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color.fromARGB(255, 228, 65, 119),
-      child: InkWell(
-        // Area responsive terhadap sentuhan
-        onTap: () {
-          // Memunculkan SnackBar ketika diklik
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!",
-                style: const TextStyle(
-                  fontFamily: 'Cushion'
-                ),)));
-        },
-        child: Container(
-          // Container untuk menyimpan Icon dan Text
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Kitto'),
-                ),
-              ],
-            ),
           ),
         ),
       ),
