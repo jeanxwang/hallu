@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hallu/screens/menu.dart';
 import 'package:hallu/widgets/left_drawer.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ShopFormPage extends StatefulWidget {
   const ShopFormPage({super.key});
@@ -16,6 +21,8 @@ class _ShopFormPageState extends State<ShopFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -125,42 +132,66 @@ class _ShopFormPageState extends State<ShopFormPage> {
                       backgroundColor:
                           MaterialStateProperty.all(Color.fromARGB(255, 228, 65, 119)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text(
-                                'The best is yet to come!',
-                                style: TextStyle(
-                                  fontFamily: 'Kitto',
-                                  color: Color.fromARGB(255, 228, 65, 119),
-                                )
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Name: $_name', style: TextStyle(fontFamily: 'Kitto')),
-                                    Text('Amount: $_amount', style: TextStyle(fontFamily: 'Kitto')),
-                                    Text('Description: $_description', style: TextStyle(fontFamily: 'Kitto'))
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('Daebak!', style: TextStyle(fontFamily: 'Kitto')),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
+                        // Kirim ke Django dan tunggu respons
+                        final response = await request.postJson(
+                        "http://127.0.0.1:8000/create-flutter/",
+                        jsonEncode(<String, String>{
+                            'name': _name,
+                            'amount': _amount.toString(),
+                            'description': _description,
+                        }));
+                        if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                            content: Text("Produk baru berhasil disimpan!"),
+                            ));
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => MyHomePage()),
                             );
-                          },
-                        );
-                      _formKey.currentState!.reset();
+                        } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                                content:
+                                    Text("Terdapat kesalahan, silakan coba lagi."),
+                            ));
+                        }
+
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return AlertDialog(
+                        //       title: const Text(
+                        //         'The best is yet to come!',
+                        //         style: TextStyle(
+                        //           fontFamily: 'Kitto',
+                        //           color: Color.fromARGB(255, 228, 65, 119),
+                        //         )
+                        //       ),
+                        //       content: SingleChildScrollView(
+                        //         child: Column(
+                        //           crossAxisAlignment:
+                        //               CrossAxisAlignment.start,
+                        //           children: [
+                        //             Text('Name: $_name', style: TextStyle(fontFamily: 'Kitto')),
+                        //             Text('Amount: $_amount', style: TextStyle(fontFamily: 'Kitto')),
+                        //             Text('Description: $_description', style: TextStyle(fontFamily: 'Kitto'))
+                        //           ],
+                        //         ),
+                        //       ),
+                        //       actions: [
+                        //         TextButton(
+                        //           child: const Text('Daebak!', style: TextStyle(fontFamily: 'Kitto')),
+                        //           onPressed: () {
+                        //             Navigator.pop(context);
+                        //           },
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
                       }
                     },
                     child: const Text(

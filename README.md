@@ -3,6 +3,7 @@
 ### Contents
 * [Tugas 7: Elemen Dasar Flutter](#tugas-7)
 * [Tugas 8: Flutter Navigation, Layouts, Forms, and Input Elements](#tugas-8)
+* [Tugas 9: Integrasi Layanan Web Django dengan Aplikasi Flutter](#tugas-9)
 
 <a name="tugas-7"></a>
 ## Tugas 7: Elemen Dasar Flutter
@@ -61,3 +62,53 @@ Penerapan _Clean Architecture_ pada aplikasi Flutter dapat dilakukan dengan memi
 ### Jelaskan bagaimana cara kamu mengimplementasikan _checklist_ di atas secara _step-by-step_! (bukan hanya sekadar mengikuti tutorial)
 
 Pertama, saya membuat kode untuk _left drawer_ dan memasukkannya ke `menu.dart`. Kedua, saya membuat `shoplist_form.dart` dan menambahkan _left drawer_ yang sudah dibuat tadi juga. Tentunya, saya melengkapi _routing_ serta _impor package_ agar _drawer_ dapat diakses dari halaman utama maupun halaman _form_, dan sebaliknya.
+
+<a name="tugas-9"></a>
+## Tugas 9: Integrasi Layanan Web Django dengan Aplikasi Flutter
+
+### Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
+
+Ya, kita bisa melakukan pengambilan data JSON tanpa membuat model terlebih dahulu.
+Namun, ada beberapa keuntungan dalam membuat model data terlebih dahulu:
+1. Validasi Data: Model data dapat membantu dalam memvalidasi data JSON yang diterima. Jika data tidak sesuai dengan model, maka akan muncul error, sehingga kita bisa mengetahui jika ada data yang tidak sesuai atau tidak lengkap.
+2. Kemudahan Akses: Dengan model data, kita bisa mengakses properti data dengan lebih mudah dan kode akan lebih mudah dibaca.
+3. Dokumentasi: Model data juga berfungsi sebagai dokumentasi, memberikan gambaran tentang struktur data yang diharapkan.
+
+### Jelaskan fungsi dari CookieRequest dan jelaskan mengapa _instance_ CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+
+`CookieRequest` adalah kelas yang digunakan untuk mengirim permintaan HTTP dengan cookie. Dalam aplikasi Flutter, `CookieRequest` dapat digunakan untuk mengirim permintaan HTTP dengan cookie yang diperoleh dari server.
+
+Instance `CookieRequest` perlu dibagikan ke semua komponen di aplikasi Flutter karena ini memungkinkan penggunaan cookie yang sama di seluruh aplikasi. Dengan cara ini, kita dapat memastikan bahwa setiap permintaan HTTP yang dibuat oleh aplikasi menggunakan cookie yang sama. Ini sangat penting dalam aplikasi yang memerlukan autentikasi, di mana cookie digunakan untuk mengidentifikasi pengguna yang terautentikasi.
+
+### Jelaskan mekanisme pengambilan data dari JSON hingga dapat ditampilkan pada Flutter.
+
+Untuk membuat model yang menyesuaikan dengan data JSON, kita dapat memanfaatkan website Quicktype. Selanjutnya, untuk melakukan perintah HTTP request, kita _install_ package tambahan yakni package http. Pada file android/app/src/main/AndroidManifest.xml, modifikasi kode untuk memperbolehkan akses Internet pada aplikasi Flutter yang sedang dibuat. Terakhir, melakukan fetch data dari Django.
+
+### Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+
+1. Flutter mengirimkan data akun ke Django melalui API _call_.
+2. Django menerima data akun dan memeriksa apakah data tersebut valid atau tidak.
+3. Jika data akun valid, Django akan menghasilkan token akses dan mengirimkannya kembali ke Flutter melalui API _call_.
+4. Flutter menerima token akses dan menyimpannya di _local storage_.
+5. Flutter mengirimkan token akses ke Django melalui API _call_ setiap kali meminta data yang memerlukan autentikasi.
+6. Django memeriksa token akses dan memastikan bahwa token akses tersebut valid.
+7. Jika token akses valid, Django akan mengembalikan data yang diminta ke Flutter melalui API _call_.
+8. Flutter menerima data yang diminta dan menampilkannya pada menu.
+
+### Sebutkan seluruh _widget_ yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.
+
+1. **Provider**: _Widget_ yang digunakan untuk membagikan objek ke dalam pohon _widget_.
+2. **MaterialApp**: _Widget_ yang digunakan untuk membuat aplikasi Flutter dengan tema _material design_.
+3. **Scaffold**: _Widget_ yang digunakan untuk membuat struktur dasar aplikasi _material design_.
+4. **AppBar**: _Widget_ yang digunakan untuk membuat AppBar.
+5. **Container**: _Widget_ yang digunakan untuk membuat kotak yang dapat diatur ukurannya.
+6. **Column**: _Widget_ yang digunakan untuk mengatur _widget_ dalam kolom vertikal.
+7. **TextField**: _Widget_ yang digunakan untuk membuat input teks.
+8. **SizedBox**: _Widget_ yang digunakan untuk membuat kotak kosong dengan ukuran tertentu.
+9. **ElevatedButton**: _Widget_ yang digunakan untuk membuat tombol dengan tampilan yang lebih menonjol.
+10. **AlertDialog**: _Widget_ yang digunakan untuk membuat dialog dengan tombol OK.
+11. **ScaffoldMessenger**: _Widget_ yang digunakan untuk menampilkan pesan pada layar.
+
+### Jelaskan bagaimana cara kamu mengimplementasikan _checklist_ di atas secara _step-by-step_! (bukan hanya sekadar mengikuti tutorial).
+
+Pertama, buat aplikasi `authentication` di Django. Buat `views.py` dan `urls.py` di aplikasi baru. Selanjutnya, _install package_ untuk autentikasi dan modifikasi _root widget_ untuk buat CookieRequest. Lalu, buat halaman `login.dart`. Lanjut, buat model kustom menggunakan Quicktype, menambahkan dependensi http dan melakukan _fetch_ data dari Django. Selanjutnya, membuat fungsi `create_product_flutter` di Django dan memodifikasi `shoplist_form.dart` untuk mengintegrasi _form_ Flutter dengan layanan Django. Lalu, saya mengimplementasikan fitur `logout` dan diakhiri dengan membuat `product_detail.dart` serta menghubungkannya dari halaman daftar produk agar _user_ diarahkan ke halaman baru saat memilih produk spesifik di halaman daftar produk.

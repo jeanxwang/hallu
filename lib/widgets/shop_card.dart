@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hallu/screens/list_product.dart';
+import 'package:hallu/screens/login.dart';
 import 'package:hallu/screens/shoplist_form.dart';
 import 'package:hallu/screens/menu.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ShopCard extends StatelessWidget {
   final Item item;
@@ -9,11 +13,13 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+    
     return Material(
       color: Color.fromARGB(255, 228, 65, 119),
       child: InkWell(
         // Area responsive terhadap sentuhan
-        onTap: () {
+        onTap: () async {
           // Memunculkan SnackBar ketika diklik
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -31,6 +37,27 @@ class ShopCard extends StatelessWidget {
                 builder: (context) => ShopFormPage(),
               )
             );
+          } else if (item.name == "Peek-a-boo") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProductPage()));
+          } else if (item.name == "Logout") {
+            final response = await request.logout(
+                "http://127.0.0.1/auth/logout/");
+            String message = response["message"];
+            if (response['status']) {
+              String uname = response["username"];
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message Sampai jumpa, $uname."),
+              ));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message"),
+              ));
+            }
           }
         },
         child: Container(
